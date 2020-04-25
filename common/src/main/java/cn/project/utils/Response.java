@@ -29,4 +29,12 @@ public class Response {
     this.responseBody = responseBody;
     return this;
   }
+
+  public Object getResponseBody() {
+    return responseBody;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
 }

@@ -8,15 +8,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import javax.annotation.Resource;
 
-//@Configuration
-//@EnableOAuth2Sso
+@Configuration
+@EnableOAuth2Sso
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Resource
-    private CusomCsrfMatcher cusomCsrfMatcher;
+//    @Resource
+//    private CusomCsrfMatcher cusomCsrfMatcher;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().requireCsrfProtectionMatcher(cusomCsrfMatcher);
-        super.configure(http);
+        http.authorizeRequests().anyRequest().authenticated();
+        http.csrf().disable();
+//        http.csrf().requireCsrfProtectionMatcher(cusomCsrfMatcher);
+//        super.configure(http);
     }
 }

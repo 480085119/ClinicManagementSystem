@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api")
@@ -25,19 +27,18 @@ public class APIMedicineController {
             @ApiImplicitParam(paramType = "query",name = "prescriptionTypeId",value = "处方类型ID(表示该药品属于(西药、中药、检查项目中的哪一种))",required = true),
             @ApiImplicitParam(paramType = "query",name = "medicineTypeId",value = "药品类型ID"),
             @ApiImplicitParam(paramType = "query",name = "nameOrPinYin",value = "药品名称或拼音"),
-            @ApiImplicitParam(paramType = "query",name = "pageNo",value = "当前页",required = true),
-            @ApiImplicitParam(paramType = "query",name = "pageSize",value = "每页显示大小",required = true)
+            @ApiImplicitParam(paramType = "query",name = "page",value = "当前页",required = true),
+            @ApiImplicitParam(paramType = "query",name = "limit",value = "每页显示大小",required = true)
     })
     @GetMapping("getMedicine")
-    public Response getMedicine(@RequestParam Integer prescriptionTypeId, @RequestParam(required = false) Integer medicineTypeId, @RequestParam(required = false) String nameOrPinYin, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
-        if(pageNo == null){
-            pageNo = 1;
+    public Object getMedicine(@RequestParam Integer prescriptionTypeId, @RequestParam(required = false) Integer medicineTypeId, @RequestParam(required = false) String nameOrPinYin, @RequestParam Integer page,@RequestParam Integer limit){
+        if(page == null){
+            page = 1;
         }
-        if(pageSize == null){
-            pageSize = 2;
+        if(limit == null){
+            limit = 2;
         }
-        pageNo = (pageNo-1)*pageSize;
-        StringBuffer buffer = new StringBuffer("?").append("pageNo=").append(pageNo).append("&pageSize=").append(pageSize);
+        StringBuffer buffer = new StringBuffer("?").append("pageNo=").append(page).append("&pageSize=").append(limit);
         if(prescriptionTypeId!=null) {
             buffer.append("&prescriptionTypeId=").append(prescriptionTypeId);
         }
@@ -47,7 +48,7 @@ public class APIMedicineController {
         if(nameOrPinYin!=null) {
             buffer.append("&nameOrPinYin=").append(nameOrPinYin);
         }
-        return httpClientHelper.get("http://localhost:8083/medicine/getMedicines"+buffer);
+        return httpClientHelper.get("http://localhost:8083/medicine/getMedicines"+buffer).getResponseBody();
     }
 
     @GetMapping("getAllMedicineType")
@@ -58,4 +59,12 @@ public class APIMedicineController {
 
     }
 
+    @GetMapping("/report")
+    public void report(HttpServletResponse response){
+        try {
+            response.sendRedirect("http://localhost:8083/medicine/report");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

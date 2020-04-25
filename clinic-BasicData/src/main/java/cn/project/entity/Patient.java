@@ -1,5 +1,7 @@
 package cn.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ public class Patient implements Serializable {
     private String patientName;
     private String patientNo;
     private Integer patientAge;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
     private Integer gender;
     private String mobile;
